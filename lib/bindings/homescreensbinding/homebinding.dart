@@ -1,11 +1,11 @@
 import 'package:get/get.dart';
-import 'package:suquna/controller/accountscreencontroller.dart';
-import 'package:suquna/controller/chatscreencontroller.dart';
-import 'package:suquna/controller/homescreencontroller.dart';
-import 'package:suquna/controller/myaddsscreencontroller.dart';
-import 'package:suquna/controller/sellscreencontroller.dart';
+import 'package:suquna/controller/homescreeenscontollers/accountscreencontroller.dart';
+import 'package:suquna/controller/homescreeenscontollers/chatscreencontroller.dart';
+import 'package:suquna/controller/homescreeenscontollers/homescreencontroller.dart';
+import 'package:suquna/controller/homescreeenscontollers/myaddsscreencontroller.dart';
+import 'package:suquna/controller/homescreeenscontollers/sellscreencontroller.dart';
 
-import '../controller/homepagecontroller.dart';
+import '../../controller/homescreeenscontollers/homepagecontroller.dart';
 
 class HomeBinding extends Bindings {
   @override

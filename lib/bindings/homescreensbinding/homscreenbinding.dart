@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:suquna/controller/homescreencontroller.dart';
+import 'package:suquna/controller/homescreeenscontollers/homescreencontroller.dart';
 
 class HomeScreenBinding extends Bindings {
   @override

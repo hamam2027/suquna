@@ -1,8 +1,11 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:suquna/approuter/approuter.dart';
+import 'package:suquna/componant/sharedwidgets.dart';
 import 'package:suquna/constant/appcolor.dart';
 import 'package:suquna/constant/appstyle.dart';
-import 'package:suquna/controller/accountscreencontroller.dart';
+import 'package:suquna/controller/homescreeenscontollers/accountscreencontroller.dart';
 
 class AccountScreen extends GetView<AccountScreenController> {
   const AccountScreen({super.key});
@@ -17,13 +20,17 @@ class AccountScreen extends GetView<AccountScreenController> {
           title: Row(
             children: [
               Text(
-                " الملف الشخصي",
-                style: AppStyle.normal,
+                "Profile".tr,
+                style: AppStyle.normalo,
               ),
               Spacer(),
-              Text(
-                "تعديل الملف الشخصي",
-                style: AppStyle.normal,
+              MainButton(
+                minWidth: 0,
+                chil: "Edit Profile".tr,
+                colo: Colors.transparent,
+                function: () {
+                  Get.toNamed(AppRouter.editprofile);
+                },
               ),
               Icon(
                 Icons.exit_to_app,
@@ -37,34 +44,61 @@ class AccountScreen extends GetView<AccountScreenController> {
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
-                  Row(
+                  Stack(
+                    clipBehavior: Clip.none,
+                    alignment: Alignment.center,
                     children: [
-                      CircleAvatar(
-                        radius: 40,
-                      ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Hamam Gaber"),
-                          Text("Syria"),
-                          Row(
-                            children: [
-                              Text("متصل"),
-                              SizedBox(
-                                width: 10,
+                      Container(
+                        child: Column(
+                          children: [
+                            CarouselSlider(
+                              items: List.generate(
+                                  5,
+                                  (index) => Container(
+                                        clipBehavior: Clip.antiAlias,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(15)),
+                                        width: double.infinity,
+                                        child: Image.asset(
+                                          "assets/images/advertsment.png",
+                                          fit: BoxFit.fill,
+                                        ),
+                                      )),
+                              options: CarouselOptions(
+                                height: 150,
+                                viewportFraction: 1,
+                                autoPlay: true,
                               ),
-                              CircleAvatar(
-                                radius: 5,
-                                backgroundColor: Colors.green,
-                              )
-                            ],
-                          )
-                        ],
-                      )
+                            ),
+                            SizedBox(
+                              height: 60,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        child: CircleAvatar(
+                          radius: 65,
+                          backgroundColor:
+                              AppColors.primaryClr.withOpacity(0.5),
+                          child: CircleAvatar(
+                            backgroundImage:
+                                AssetImage("assets/images/clothing.png"),
+                            radius: 60,
+                          ),
+                        ),
+                      ),
                     ],
+                  ),
+                  Text(
+                    "Hamam Gaber",
+                    style: AppStyle.normalw,
+                  ),
+                  Text(
+                    "Syria",
+                    style: AppStyle.normalw,
                   ),
                   SizedBox(
                     height: 20,

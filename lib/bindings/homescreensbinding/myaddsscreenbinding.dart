@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:suquna/controller/myaddsscreencontroller.dart';
+import 'package:suquna/controller/homescreeenscontollers/myaddsscreencontroller.dart';
 
 class MyAddsScreenBinding extends Bindings {
   @override

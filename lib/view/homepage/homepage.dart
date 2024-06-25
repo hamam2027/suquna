@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:suquna/constant/appcolor.dart';
 import 'package:suquna/constant/appstyle.dart';
-import 'package:suquna/controller/homepagecontroller.dart';
+import 'package:suquna/controller/homescreeenscontollers/homepagecontroller.dart';
 
 class HomePage extends GetView<HomePageController> {
   const HomePage({super.key});
@@ -22,12 +22,14 @@ class HomePage extends GetView<HomePageController> {
             decoration: const BoxDecoration(
                 color: Colors.transparent,
                 borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(50),
-                    topRight: Radius.circular(50))),
+                    topLeft: Radius.circular(10),
+                    topRight: Radius.circular(10))),
             child: BottomNavigationBar(
               currentIndex: controller.currentindex,
               onTap: (value) {
                 controller.changCurrentIndex(value);
+
+                // Get.toNamed(controller.pages[value]);
               },
               type: BottomNavigationBarType.fixed,
               backgroundColor: AppColors.secondaryClr,
@@ -64,7 +66,7 @@ class HomePage extends GetView<HomePageController> {
           ),
           body: SafeArea(
               child: Container(
-            child: controller.pages[controller.currentindex],
+            child: controller.pagess[controller.currentindex],
           )),
         );
       }),

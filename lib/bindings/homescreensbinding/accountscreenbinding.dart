@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:suquna/controller/accountscreencontroller.dart';
+import 'package:suquna/controller/homescreeenscontollers/accountscreencontroller.dart';
 
 class AccountScreenBinding extends Bindings {
   @override

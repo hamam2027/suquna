@@ -1,0 +1,106 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:flutter/material.dart';
+import 'package:suquna/constant/appcolor.dart';
+import 'package:suquna/constant/appstyle.dart';
+
+class MainformField extends StatelessWidget {
+  const MainformField({
+    Key? key,
+    this.preicon,
+    this.hint,
+    this.controller,
+    this.type,
+    this.validator,
+    this.focusNode,
+    this.maxLin,
+  }) : super(key: key);
+  final IconData? preicon;
+  final String? hint;
+  final TextEditingController? controller;
+  final TextInputType? type;
+  final FormFieldValidator? validator;
+  final FocusNode? focusNode;
+  final int? maxLin;
+  // final Function valed ;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 5),
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
+      child: TextFormField(
+        maxLines: maxLin ?? null,
+        focusNode: focusNode ?? null,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        validator: validator,
+        controller: controller ?? null,
+        keyboardType: type ?? null,
+        style: AppStyle.normalw.copyWith(decoration: TextDecoration.none),
+        decoration: InputDecoration(
+          errorStyle: AppStyle.smallw,
+          hintText: hint,
+          hintStyle: AppStyle.smallg,
+          prefixIcon: Icon(
+            preicon,
+            color: Colors.white,
+          ),
+          contentPadding: EdgeInsets.all(10),
+          border: InputBorder.none,
+          filled: true,
+          fillColor: AppColors.primaryClr2,
+          // fillColor: AppColors.primaryLight,
+        ),
+      ),
+    );
+  }
+}
+
+String? token;
+
+class MyMainContainer extends StatelessWidget {
+  final Widget child;
+  const MyMainContainer({
+    super.key,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(gradient: AppStyle.linearGradient),
+      child: child,
+    );
+  }
+}
+
+class MainButton extends StatelessWidget {
+  const MainButton({
+    Key? key,
+    required this.chil,
+    required this.colo,
+    required this.function,
+    this.minWidth,
+  }) : super(key: key);
+  final String chil;
+  final Color colo;
+  final Function function;
+  final double? minWidth;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: MaterialButton(
+        height: 50,
+        minWidth: minWidth ?? double.infinity,
+        color: colo,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        onPressed: () {
+          function();
+        },
+        child: Text(chil),
+      ),
+    );
+  }
+}
