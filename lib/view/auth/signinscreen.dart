@@ -13,7 +13,6 @@ class SignInScreen extends GetView<SignInController> {
   @override
   Widget build(BuildContext context) {
     void _hideKeyboard() {
-      // إزالة التركيز من أي عنصر مدخل نشط، مما يؤدي إلى إخفاء لوحة المفاتيح
       FocusScope.of(context).unfocus();
     }
 
@@ -102,7 +101,7 @@ class SignInScreen extends GetView<SignInController> {
                                   return MainFormValidator.emailValidator(
                                       value);
                                 },
-                                focusNode: controller.passwordfocus,
+                                focusNode: controller.emailfocus,
                               ),
                               MainformField(
                                 preicon: Icons.lock_outline,
@@ -110,12 +109,12 @@ class SignInScreen extends GetView<SignInController> {
                                 controller: controller.passwordcontroller,
                                 type: TextInputType.text,
                                 validator: (value) {
-                                  return null;
+                                  // return null;
 
-                                  // return MainFormValidator.passwordValidator(
-                                  //     value);
+                                  return MainFormValidator.passwordValidator(
+                                      value);
                                 },
-                                focusNode: controller.emailfocus,
+                                focusNode: controller.passwordfocus,
                               ),
                             ],
                           )),

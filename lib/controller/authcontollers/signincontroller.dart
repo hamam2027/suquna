@@ -7,6 +7,7 @@ import 'package:suquna/acore/api/dio_consumer.dart';
 import 'package:suquna/acore/errors/expentions.dart';
 import 'package:suquna/approuter/approuter.dart';
 import 'package:suquna/approuter/network_info.dart';
+import 'package:suquna/componant/sharedwidgets.dart';
 import 'package:suquna/constant/appcolor.dart';
 import 'package:suquna/constant/applinks.dart';
 import 'package:suquna/model/authmodels/usermodel.dart';
@@ -60,6 +61,9 @@ class SignInController extends GetxController {
       }, headers: {}).then((value) {
         userModel = UserModel.fromJson(value);
         print(userModel!.accessToken);
+
+        token = userModel!.accessToken;
+        getstorage.write('token', token);
         Get.offNamed(AppRouter.home);
       });
     } on ServerException catch (e) {

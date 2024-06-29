@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:suquna/approuter/approuter.dart';
+import 'package:suquna/componant/sharedwidgets.dart';
 import 'package:suquna/constant/appcolor.dart';
 import 'package:suquna/constant/localization.dart';
 
@@ -19,6 +20,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var getstorage = GetStorage();
+    token = getstorage.read("token");
+    print(token);
     if (getstorage.read("lang") == null) {
       getstorage.write("lang", Get.deviceLocale);
     }
@@ -40,7 +43,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primaryClr),
         useMaterial3: true,
       ),
-      initialRoute: AppRouter.signinscreen,
+      initialRoute: token != null ? AppRouter.home : AppRouter.signinscreen,
       getPages: AppRouter.routs,
     );
   }

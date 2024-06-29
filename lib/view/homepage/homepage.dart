@@ -5,8 +5,9 @@ import 'package:suquna/constant/appstyle.dart';
 import 'package:suquna/controller/homescreeenscontollers/homepagecontroller.dart';
 
 class HomePage extends GetView<HomePageController> {
-  const HomePage({super.key});
-  // final HomePageController controller = Get.find();
+  HomePage({super.key});
+
+  final HomePageController controller = Get.put(HomePageController());
 
   @override
   Widget build(BuildContext context) {

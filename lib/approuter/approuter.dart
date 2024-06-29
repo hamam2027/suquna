@@ -7,6 +7,7 @@ import 'package:suquna/bindings/chatpagebindings/chatpagebinding.dart';
 import 'package:suquna/bindings/editprofilebinding.dart';
 import 'package:suquna/bindings/homescreensbinding/accountscreenbinding.dart';
 import 'package:suquna/bindings/homescreensbinding/chatscreenbinding.dart';
+import 'package:suquna/bindings/homescreensbinding/homebinding.dart';
 import 'package:suquna/bindings/homescreensbinding/homscreenbinding.dart';
 import 'package:suquna/bindings/homescreensbinding/myaddsscreenbinding.dart';
 import 'package:suquna/bindings/homescreensbinding/sellscreenbinding.dart';
@@ -24,8 +25,6 @@ import 'package:suquna/view/homepagescreens/myaccount/myaccount.dart';
 import 'package:suquna/view/homepagescreens/myads/myadd.dart';
 import 'package:suquna/view/homepagescreens/sell/sellscreen.dart';
 import 'package:suquna/view/productscreen/productscreen.dart';
-
-import '../bindings/homescreensbinding/homebinding.dart';
 
 class AppRouter {
   static String home = "/";

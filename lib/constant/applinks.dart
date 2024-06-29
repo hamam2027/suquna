@@ -3,12 +3,20 @@ class ApiLinks {
   // static const String assetBasePath = "https://souq.sketch-test.com/public/";
   // static const String assetBasePath = "";
   static const String base = 'https://sq.sketch-test.com/api';
+  static const String imagelink = 'https://sq.sketch-test.com';
 
   static const String registrationApi = '$base/auth/register';
   static const String loginApi = '$base/auth/login';
   static const String logoutApi = '$base/logout';
+  static const String homeApi = '$base/home';
   static const String getUserData = '$base/profile';
   static const String updateUserData = '$base/profile';
+  static const String getMyadds = '$base/profile/products';
+  static const String selectCategory = '$base/select-category';
+
+  static const String getCategoriesProduct = '$base/categories';
+  static const String addGetUpdateProducts = '$base/products';
+
   static const String addFavorate = '$base/profile/wishlist';
 
   // api path and links

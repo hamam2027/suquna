@@ -1,15 +1,19 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_state_manager/src/simple/get_view.dart';
+import 'package:get/get.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:suquna/componant/sharedwidgets.dart';
 import 'package:suquna/constant/appcolor.dart';
+import 'package:suquna/constant/applinks.dart';
 import 'package:suquna/constant/appstyle.dart';
 import 'package:suquna/controller/homescreeenscontollers/myaddsscreencontroller.dart';
 
-class MyAddScreen extends GetView<MyAddsScreenController> {
-  const MyAddScreen({super.key});
+class MyAddScreen extends StatelessWidget {
+  MyAddScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    MyAddsScreenController controller = Get.find();
     Size devsize = MediaQuery.of(context).size;
     return MyMainContainer(
       child: Scaffold(
@@ -20,76 +24,124 @@ class MyAddScreen extends GetView<MyAddsScreenController> {
           ),
           centerTitle: true,
         ),
-        body: ListView.builder(
-          itemCount: 10,
-          itemBuilder: (BuildContext context, int index) {
-            return Container(
-              height: devsize.height / 5,
-              margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                color: Colors.white,
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    clipBehavior: Clip.antiAlias,
-                    decoration:
-                        BoxDecoration(borderRadius: BorderRadius.circular(15)),
-                    child: Image.network(
-                      controller.img,
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Expanded(
-                      child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "عنوان المنتج",
-                        style: AppStyle.normalb,
+        body: GetBuilder<MyAddsScreenController>(builder: (controller) {
+          return controller.myAddsModel == null
+              ? ListView.builder(
+                  itemCount: 5,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Shimmer.fromColors(
+                      baseColor: AppColors.primaryClr,
+                      highlightColor: AppColors.grayClr,
+                      child: Container(
+                        margin: EdgeInsets.all(10),
+                        width: double.infinity,
+                        height: devsize.height * 0.20,
+                        decoration: BoxDecoration(
+                            color: AppColors.whiteClr,
+                            borderRadius: BorderRadius.circular(15)),
                       ),
-                      Expanded(
-                          child: Text(
-                              "ويُستخدم في صناعات المطابع ودور النشر. كان لوريم إيبسوم ولايزال المعيار للنص الشكلي منذ القرن الخامس عشر عندما قامت مطبعة مجهولة برص مجموعة من الأحرف بشكل عشوائي أخذتها من نص، لتكوّن كتيّب بمثابة دليل أو مرجع شكلي لهذه الأحرف. خمسة قرون من الزمن لم تقضي على هذا النص، بل انه حتى صار مستخدماً وبشكله الأصلي في الطباعة والتنضيد الإلكتروني. انتشر بشكل كبير في ستينيّات هذا القرن مع إصدار رقائق ")),
-                      // Spacer(),
-                      Row(
+                    );
+                  },
+                )
+              : ListView.builder(
+                  physics: BouncingScrollPhysics(),
+                  itemCount: controller.myAddsModel!.items!.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Container(
+                      height: devsize.height / 5,
+                      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: Colors.white,
+                      ),
+                      child: Row(
                         children: [
                           Expanded(
-                            child: MaterialButton(
-                              shape: RoundedRectangleBorder(
+                            flex: 1,
+                            child: Container(
+                              clipBehavior: Clip.antiAlias,
+                              decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(15)),
-                              padding: EdgeInsets.all(5),
-                              color: AppColors.infoClr,
-                              onPressed: () {},
-                              child: Text("تعديل"),
+                              child: CachedNetworkImage(
+                                placeholder: (context, url) =>
+                                    Shimmer.fromColors(
+                                  baseColor: AppColors.primaryClr,
+                                  highlightColor: AppColors.grayClr,
+                                  child: Container(
+                                    child: Center(
+                                      child: Text("loding"),
+                                    ),
+                                  ),
+                                ),
+                                imageUrl:
+                                    "${ApiLinks.imagelink + controller.myAddsModel!.items![index].image!}",
+                              ),
                             ),
                           ),
                           SizedBox(
                             width: 10,
                           ),
                           Expanded(
-                            child: MaterialButton(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15)),
-                              padding: EdgeInsets.all(5),
-                              color: AppColors.warningClr,
-                              onPressed: () {},
-                              child: Text("حذف"),
-                            ),
-                          ),
+                              flex: 2,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    controller.myAddsModel!.items![index].name!,
+                                    style: AppStyle.normalb,
+                                  ),
+                                  Expanded(
+                                      child: Text(
+                                    controller.myAddsModel!.items![index]
+                                        .description!,
+                                  )),
+                                  // Spacer(),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: MaterialButton(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15)),
+                                          padding: EdgeInsets.all(5),
+                                          color: AppColors.infoClr,
+                                          onPressed: () {},
+                                          child: Text("تعديل"),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Expanded(
+                                        child: MaterialButton(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15)),
+                                          padding: EdgeInsets.all(5),
+                                          color: AppColors.warningClr,
+                                          onPressed: () {
+                                            print(controller
+                                                .myAddsModel!.items![index].id);
+                                            // controller.deleteMyAdd(
+                                            //   controller
+                                            //       .myAddsModel!.items![index].id
+                                            //       .toString(),
+                                            // );
+                                          },
+                                          child: Text("حذف"),
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ))
                         ],
-                      )
-                    ],
-                  ))
-                ],
-              ),
-            );
-          },
-        ),
+                      ),
+                    );
+                  },
+                );
+        }),
       ),
     );
   }

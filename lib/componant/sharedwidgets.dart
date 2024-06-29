@@ -1,7 +1,12 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:suquna/constant/appcolor.dart';
 import 'package:suquna/constant/appstyle.dart';
+import 'package:suquna/controller/authcontollers/signupcontroller.dart';
+
+String? token;
+Map<String, String> header = {"Authorization": "Bearer $token"};
 
 class MainformField extends StatelessWidget {
   const MainformField({
@@ -30,9 +35,10 @@ class MainformField extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
       child: TextFormField(
+        autofocus: false,
         maxLines: maxLin ?? null,
         focusNode: focusNode ?? null,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
+        // autovalidateMode: AutovalidateMode.onUserInteraction,
         validator: validator,
         controller: controller ?? null,
         keyboardType: type ?? null,
@@ -56,8 +62,6 @@ class MainformField extends StatelessWidget {
   }
 }
 
-String? token;
-
 class MyMainContainer extends StatelessWidget {
   final Widget child;
   const MyMainContainer({
@@ -74,6 +78,122 @@ class MyMainContainer extends StatelessWidget {
   }
 }
 
+class FormForDate extends StatelessWidget {
+  final IconData? calendericon;
+  final Function? datepic;
+  final TextEditingController? controller;
+  const FormForDate({
+    Key? key,
+    this.calendericon,
+    this.datepic,
+    this.controller,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        margin: EdgeInsets.symmetric(vertical: 5),
+        clipBehavior: Clip.antiAlias,
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
+        child: TextFormField(
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          validator: (value) {
+            if (value!.isEmpty) {
+              return "هذا الحقل مطلوب";
+            } else {
+              return null;
+            }
+          },
+          style: AppStyle.normalw,
+          controller: controller,
+          readOnly: true,
+          onTap: () {
+            datepic!();
+          },
+          decoration: InputDecoration(
+            errorStyle: AppStyle.smallw,
+            hintText: "enter your birth day",
+            hintStyle: AppStyle.smallb,
+
+            prefixIcon: Icon(
+              calendericon,
+              color: Colors.white,
+            ),
+            contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+            border: InputBorder.none,
+            filled: true,
+            fillColor: AppColors.primaryClr2,
+            // fillColor: AppColors.primaryLight,
+          ),
+        ));
+  }
+}
+
+class FormForCuntry extends StatelessWidget {
+  final SignUpController controller = Get.find();
+  // GetxController controller;
+
+  FormForCuntry({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 5),
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
+      child: DropdownButtonFormField(
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          validator: (value) {
+            if (value!.isEmpty) {
+              return "هذا الحقل مطلوب";
+            } else {
+              return null;
+            }
+          },
+          isExpanded: true,
+          dropdownColor: AppColors.primaryClr2,
+          style: AppStyle.normalw,
+          borderRadius: BorderRadius.circular(15),
+          decoration: InputDecoration(
+            errorStyle: AppStyle.smallw,
+            hintText: "choose your cuntry",
+            hintStyle: AppStyle.smallg,
+            prefixIcon: Icon(
+              Icons.flag,
+              color: Colors.white,
+            ),
+            contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+            border: InputBorder.none,
+            filled: true,
+            fillColor: AppColors.primaryClr2,
+            // fillColor: AppColors.primaryLight,
+          ),
+          // value: "syria",
+          items: [
+            DropdownMenuItem<String>(
+              value: "syria",
+              child: Text("syria"),
+            ),
+            DropdownMenuItem(
+              value: "turky",
+              child: Text("turky"),
+            ),
+            DropdownMenuItem(
+              value: "irak",
+              child: Text("irak"),
+            ),
+          ],
+          onChanged: (v) {
+            controller.cuntry = v;
+            print(controller.cuntry);
+            controller.update();
+          }),
+    );
+  }
+}
+
 class MainButton extends StatelessWidget {
   const MainButton({
     Key? key,
@@ -81,11 +201,13 @@ class MainButton extends StatelessWidget {
     required this.colo,
     required this.function,
     this.minWidth,
+    this.styll,
   }) : super(key: key);
   final String chil;
   final Color colo;
   final Function function;
   final double? minWidth;
+  final TextStyle? styll;
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +221,10 @@ class MainButton extends StatelessWidget {
         onPressed: () {
           function();
         },
-        child: Text(chil),
+        child: Text(
+          chil,
+          style: styll,
+        ),
       ),
     );
   }

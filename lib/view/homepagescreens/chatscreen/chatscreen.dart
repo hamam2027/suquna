@@ -3,14 +3,13 @@ import 'package:get/get.dart';
 import 'package:suquna/approuter/approuter.dart';
 import 'package:suquna/constant/appcolor.dart';
 import 'package:suquna/constant/appstyle.dart';
-import 'package:suquna/controller/homescreeenscontollers/chatscreencontroller.dart';
 
-class ChatScreen extends GetView<ChatScreenController> {
+class ChatScreen extends StatelessWidget {
   ChatScreen({super.key});
-  ChatScreenController controller = Get.find();
 
   @override
   Widget build(BuildContext context) {
+    // ChatScreenController controller = Get.find();
     return Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(

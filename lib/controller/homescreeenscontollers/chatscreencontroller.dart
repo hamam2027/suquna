@@ -5,7 +5,8 @@ class ChatScreenController extends GetxController {
 
   @override
   void onInit() {
-    print("object");
+    super.onInit();
+    print("chatScreen");
   }
 
   @override

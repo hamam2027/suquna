@@ -1,7 +1,9 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:suquna/componant/sharedwidgets.dart';
 import 'package:suquna/constant/appcolor.dart';
+import 'package:suquna/constant/applinks.dart';
 import 'package:suquna/constant/appstyle.dart';
 import 'package:suquna/controller/editprofilecontroller.dart';
 
@@ -33,9 +35,14 @@ class EditProfileScreen extends GetView<EditProfileScreenController> {
                       GetBuilder<EditProfileScreenController>(
                           builder: (controller) {
                         return CircleAvatar(
-                          backgroundImage: controller.imagefile != null
+                          backgroundImage: controller.image != null
                               ? FileImage(controller.imagefile!)
-                              : null,
+                              : controller.user != null
+                                  ? NetworkImage(
+                                          "${ApiLinks.imagelink + controller.user!.avatar!}")
+                                      as ImageProvider
+                                  : null,
+                          // :null,
                           radius: 75,
                         );
                       }),
@@ -143,25 +150,17 @@ class EditProfileScreen extends GetView<EditProfileScreenController> {
               SizedBox(
                 height: 30,
               ),
-              Row(
-                children: [
-                  Expanded(
-                    child: MainformField(
-                      hint: "الاسم الاول",
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Expanded(
-                    child: MainformField(
-                      hint: "الاسم الاخير",
-                    ),
-                  ),
-                ],
+              MainformField(
+                hint: "الاسم",
               ),
               MainformField(
                 hint: "رقم الهاتف",
+              ),
+              FormForEditCountry(
+                onchang: (value) {
+                  controller.changCountry(value);
+                  print(controller.editCountry);
+                },
               ),
               MainformField(),
               MainformField(),
@@ -169,14 +168,135 @@ class EditProfileScreen extends GetView<EditProfileScreenController> {
               SizedBox(
                 height: devsiz.height / 15,
               ),
+              Row(
+                children: [
+                  Text(
+                    "اختر النوع",
+                    style: AppStyle.normalw,
+                  ),
+                  SizedBox(
+                    width: 40,
+                  ),
+                  Expanded(
+                    child: Container(
+                      margin: EdgeInsets.symmetric(vertical: 5),
+                      clipBehavior: Clip.antiAlias,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          color: AppColors.primaryClr2),
+                      child: DropdownButtonFormField(
+                          style: TextStyle(color: AppColors.whiteClr),
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          validator: (value) {
+                            return value == null ? 'يجب اختيار النوع' : null;
+                          },
+                          icon: Icon(
+                            Icons.keyboard_arrow_down,
+                            color: Colors.white,
+                          ),
+                          iconSize: 35,
+                          dropdownColor: AppColors.primaryClr2,
+                          borderRadius: BorderRadius.circular(20),
+                          padding: EdgeInsets.symmetric(horizontal: 15),
+                          decoration: InputDecoration(
+                              errorStyle: AppStyle.smallw,
+                              border: InputBorder.none),
+                          items: List.generate(
+                              genderlist.length,
+                              (index) => DropdownMenuItem<String>(
+                                  value: genderlist[index]["gender"],
+                                  child: Text(genderlist[index]["text"]))),
+                          onChanged: (String? v) {
+                            controller.changgender(v);
+                            print(v);
+                            // controller.changeCatId(v!);
+                          }),
+                    ),
+                  ),
+                ],
+              ),
               MainButton(
                   chil: "حفظ التغييرات",
                   colo: AppColors.secondaryClr,
-                  function: () {})
+                  function: () {
+                    controller.editProfileDetailse();
+                  })
             ],
           ),
         ),
       ),
     ));
+  }
+}
+
+List<Map> genderlist = [
+  {"gender": "1", "text": "ذكر"},
+  {"gender": "2", "text": "انثى"}
+];
+
+class FormForEditCountry extends StatelessWidget {
+  final Function(String?) onchang;
+
+  FormForEditCountry({
+    Key? key,
+    required this.onchang,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 5),
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
+      child: DropdownButtonFormField(
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          validator: (value) {
+            if (value!.isEmpty) {
+              return "هذا الحقل مطلوب";
+            } else {
+              return null;
+            }
+          },
+          isExpanded: true,
+          dropdownColor: AppColors.primaryClr2,
+          style: AppStyle.normalw,
+          borderRadius: BorderRadius.circular(15),
+          decoration: InputDecoration(
+            errorStyle: AppStyle.smallw,
+            hintText: "choose your cuntry",
+            hintStyle: AppStyle.smallg,
+            prefixIcon: Icon(
+              Icons.flag,
+              color: Colors.white,
+            ),
+            contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+            border: InputBorder.none,
+            filled: true,
+            fillColor: AppColors.primaryClr2,
+            // fillColor: AppColors.primaryLight,
+          ),
+          // value: "syria",
+          items: [
+            DropdownMenuItem<String>(
+              value: "syria",
+              child: Text("syria"),
+            ),
+            DropdownMenuItem(
+              value: "turky",
+              child: Text("turky"),
+            ),
+            DropdownMenuItem(
+              value: "irak",
+              child: Text("irak"),
+            ),
+          ],
+          onChanged: (String? value) {
+            onchang(value);
+
+            // controller.cuntry = v;
+            // print(controller.cuntry);
+            // controller.update();
+          }),
+    );
   }
 }

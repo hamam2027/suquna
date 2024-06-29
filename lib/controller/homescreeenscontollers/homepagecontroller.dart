@@ -12,13 +12,35 @@ import 'package:suquna/view/homepagescreens/myads/myadd.dart';
 import 'package:suquna/view/homepagescreens/sell/sellscreen.dart';
 
 class HomePageController extends GetxController {
+  // int currentindex = 0;
+  // changCurrentIndex(index) {
+
+  //   currentindex = index;
+  //   update();
+  // }
+
+  List<Widget> pagess = [
+    HomeScreen(),
+    ChatScreen(),
+    SellScreen(),
+    MyAddScreen(),
+    AccountScreen(),
+  ];
+  @override
+  void onInit() {
+    print("homePage");
+    super.onInit();
+  }
+
   int currentindex = 0;
   changCurrentIndex(index) {
     // print(currentindex);
 
     if (index != currentindex) {
-      updatecontroller(index);
       deleteController(currentindex);
+      update();
+      updatecontroller(index);
+      update();
     }
 
     currentindex = index;
@@ -28,6 +50,8 @@ class HomePageController extends GetxController {
   }
 
   void deleteController(int index) {
+    print("delete");
+
     switch (index) {
       case 0:
         Get.delete<HomeScreenController>();
@@ -48,6 +72,7 @@ class HomePageController extends GetxController {
   }
 
   updatecontroller(int index) {
+    print("update");
     switch (index) {
       case 0:
         Get.lazyPut<HomeScreenController>(
@@ -84,20 +109,4 @@ class HomePageController extends GetxController {
         break;
     }
   }
-
-  List<dynamic> controllers = [
-    HomeScreenController,
-    ChatScreenController,
-    SellScreenController,
-    MyAddsScreenController,
-    AccountScreenController,
-  ];
-
-  List<Widget> pagess = [
-    HomeScreen(),
-    ChatScreen(),
-    SellScreen(),
-    MyAddScreen(),
-    AccountScreen(),
-  ];
 }
