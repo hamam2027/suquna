@@ -1,12 +1,13 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shimmer/shimmer.dart';
+import 'package:suquna/approuter/approuter.dart';
 import 'package:suquna/componant/sharedwidgets.dart';
 import 'package:suquna/constant/appcolor.dart';
 import 'package:suquna/constant/applinks.dart';
 import 'package:suquna/constant/appstyle.dart';
 import 'package:suquna/controller/homescreeenscontollers/myaddsscreencontroller.dart';
+import 'package:suquna/view/homepagescreens/myads/myaddswidgets/addwidget.dart';
+import 'package:shimmer/shimmer.dart';
 
 class MyAddScreen extends StatelessWidget {
   MyAddScreen({super.key});
@@ -43,104 +44,43 @@ class MyAddScreen extends StatelessWidget {
                     );
                   },
                 )
-              : ListView.builder(
-                  physics: BouncingScrollPhysics(),
-                  itemCount: controller.myAddsModel!.items!.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                      height: devsize.height / 5,
-                      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                      padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        color: Colors.white,
+              : controller.myAddsModel!.items!.isEmpty
+                  ? Center(
+                      child: Text(
+                        "لا يوجد اعلانات بعد",
+                        style: AppStyle.normalw,
                       ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Container(
-                              clipBehavior: Clip.antiAlias,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15)),
-                              child: CachedNetworkImage(
-                                placeholder: (context, url) =>
-                                    Shimmer.fromColors(
-                                  baseColor: AppColors.primaryClr,
-                                  highlightColor: AppColors.grayClr,
-                                  child: Container(
-                                    child: Center(
-                                      child: Text("loding"),
-                                    ),
-                                  ),
-                                ),
-                                imageUrl:
-                                    "${ApiLinks.imagelink + controller.myAddsModel!.items![index].image!}",
-                              ),
-                            ),
+                    )
+                  : ListView.builder(
+                      physics: BouncingScrollPhysics(),
+                      itemCount: controller.myAddsModel!.items!.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return GestureDetector(
+                          onTap: () {
+                            Get.toNamed(AppRouter.productscreen, arguments: {
+                              "id": controller.myAddsModel!.items![index].id
+                            });
+                          },
+                          child: MyAddWidget(
+                            devsize: devsize,
+                            name: controller.myAddsModel!.items![index].name!,
+                            description: controller
+                                .myAddsModel!.items![index].description!,
+                            imageUrl:
+                                "${ApiLinks.imagelink + controller.myAddsModel!.items![index].image!}",
+                            delete: () {},
+                            edit: () {
+                              Get.toNamed(AppRouter.editproductscreen,
+                                  arguments: {
+                                    "id": controller
+                                        .myAddsModel!.items![index].id
+                                        .toString()
+                                  });
+                            },
                           ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Expanded(
-                              flex: 2,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    controller.myAddsModel!.items![index].name!,
-                                    style: AppStyle.normalb,
-                                  ),
-                                  Expanded(
-                                      child: Text(
-                                    controller.myAddsModel!.items![index]
-                                        .description!,
-                                  )),
-                                  // Spacer(),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: MaterialButton(
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(15)),
-                                          padding: EdgeInsets.all(5),
-                                          color: AppColors.infoClr,
-                                          onPressed: () {},
-                                          child: Text("تعديل"),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      Expanded(
-                                        child: MaterialButton(
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(15)),
-                                          padding: EdgeInsets.all(5),
-                                          color: AppColors.warningClr,
-                                          onPressed: () {
-                                            print(controller
-                                                .myAddsModel!.items![index].id);
-                                            // controller.deleteMyAdd(
-                                            //   controller
-                                            //       .myAddsModel!.items![index].id
-                                            //       .toString(),
-                                            // );
-                                          },
-                                          child: Text("حذف"),
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              ))
-                        ],
-                      ),
+                        );
+                      },
                     );
-                  },
-                );
         }),
       ),
     );

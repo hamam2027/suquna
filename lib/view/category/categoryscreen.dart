@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:suquna/approuter/approuter.dart';
 import 'package:suquna/constant/appcolor.dart';
 import 'package:suquna/constant/applinks.dart';
 import 'package:suquna/constant/appstyle.dart';
@@ -56,7 +57,11 @@ class CategoryScreen extends GetView<CategoryScreenController> {
                               // hoverColor: AppConst.secandrycolor,
                               onTap: () async {
                                 // func();
-                                // Get.toNamed(AppRouter.productdetailse, arguments: {"name": "hamam"});
+                                Get.toNamed(AppRouter.productscreen,
+                                    arguments: {
+                                      "id": controller
+                                          .listproductCategory[index].id
+                                    });
                               },
                               child: Container(
                                 padding: const EdgeInsets.all(5),

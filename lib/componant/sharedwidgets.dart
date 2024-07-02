@@ -4,9 +4,35 @@ import 'package:get/get.dart';
 import 'package:suquna/constant/appcolor.dart';
 import 'package:suquna/constant/appstyle.dart';
 import 'package:suquna/controller/authcontollers/signupcontroller.dart';
+import 'package:shimmer/shimmer.dart';
 
-String? token;
-Map<String, String> header = {"Authorization": "Bearer $token"};
+// Map<String, String> {"Authorization": "Bearer $token"} = {"Authorization": "Bearer $token"};
+String subtractDates(String dateString) {
+  DateTime currentDate = DateTime.now();
+  DateTime parsedDate = DateTime.parse(dateString);
+
+  Duration difference = currentDate.difference(parsedDate);
+
+  int daysDifference = difference.inDays;
+  int hoursDifference = difference.inHours % 24;
+  int minutesDifference = difference.inMinutes % 60;
+
+  return '$daysDifference يوماً $hoursDifference ساعات $minutesDifference دقائق';
+}
+
+int subtractDatesForyear(String dateString) {
+  DateTime currentDate = DateTime.now();
+  DateTime parsedDate = DateTime.parse(dateString);
+
+  Duration difference = currentDate.difference(parsedDate);
+
+  // int daysDifference = difference.inDays;
+  // int hoursDifference = difference.inHours % 24;
+  // int minutesDifference = difference.inMinutes % 60;
+  int yeers = difference.inDays % 365;
+
+  return yeers;
+}
 
 class MainformField extends StatelessWidget {
   const MainformField({
@@ -177,8 +203,8 @@ class FormForCuntry extends StatelessWidget {
               child: Text("syria"),
             ),
             DropdownMenuItem(
-              value: "turky",
-              child: Text("turky"),
+              value: "Turkish",
+              child: Text("Turkish"),
             ),
             DropdownMenuItem(
               value: "irak",
@@ -226,6 +252,29 @@ class MainButton extends StatelessWidget {
           style: styll,
         ),
       ),
+    );
+  }
+}
+
+class ShimerLodingForCo extends StatelessWidget {
+  const ShimerLodingForCo({
+    super.key,
+    this.width,
+  });
+  final double? width;
+
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer.fromColors(
+      child: Container(
+        decoration: BoxDecoration(
+            color: Colors.grey, borderRadius: BorderRadius.circular(10)),
+        height: 40,
+        width: width ?? double.infinity,
+        margin: EdgeInsets.all(10),
+      ),
+      baseColor: AppColors.primaryClr,
+      highlightColor: AppColors.secondaryClr,
     );
   }
 }

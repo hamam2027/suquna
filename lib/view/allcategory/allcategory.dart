@@ -8,7 +8,9 @@ class AllCategories extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(gradient: AppStyle.linearGradient),
-    child: Center(child: Container(),),
+      child: Center(
+        child: Container(),
+      ),
     );
   }
 }

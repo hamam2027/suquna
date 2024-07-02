@@ -11,7 +11,9 @@ import 'package:suquna/bindings/homescreensbinding/homebinding.dart';
 import 'package:suquna/bindings/homescreensbinding/homscreenbinding.dart';
 import 'package:suquna/bindings/homescreensbinding/myaddsscreenbinding.dart';
 import 'package:suquna/bindings/homescreensbinding/sellscreenbinding.dart';
+import 'package:suquna/bindings/productscreenbindings/editproductscreenbinding.dart';
 import 'package:suquna/bindings/productscreenbindings/productscreenbinding.dart';
+import 'package:suquna/bindings/sellerbinding/sellerbinding.dart';
 import 'package:suquna/view/auth/forgetpassswordscreen.dart';
 import 'package:suquna/view/auth/signinscreen.dart';
 import 'package:suquna/view/auth/signupscreen.dart';
@@ -24,23 +26,27 @@ import 'package:suquna/view/homepagescreens/homescreen/homescreen.dart';
 import 'package:suquna/view/homepagescreens/myaccount/myaccount.dart';
 import 'package:suquna/view/homepagescreens/myads/myadd.dart';
 import 'package:suquna/view/homepagescreens/sell/sellscreen.dart';
-import 'package:suquna/view/productscreen/productscreen.dart';
+import 'package:suquna/view/productscreens/editproductscreen.dart';
+import 'package:suquna/view/productscreens/productscreen.dart';
+import 'package:suquna/view/seller/sellerscreen.dart';
 
 class AppRouter {
-  static String home = "/";
-  static String getHomeRout() => home;
-  static String chatscreen = "/chatscreen";
-  static String chatPagecreen = "/chatPagecreen";
-  static String homescreen = "/homescreen";
-  static String sellscreen = "/sellscreen";
-  static String myaddsscreen = "/myaddsscreen";
-  static String accountscreen = "/accountscreen";
-  static String categoryscreen = "/categoryscreen";
-  static String signupscreen = "/signupscreen";
-  static String signinscreen = "/signinscreen";
-  static String forgetpassword = "/forgetpassword";
-  static String productscreen = "/productscreen";
-  static String editprofile = "/editprofile";
+  static const String signinscreen = "/";
+  static String getHomeRout() => signinscreen;
+  static const String chatscreen = "/chatscreen";
+  static const String chatPagecreen = "/chatPagecreen";
+  static const String homescreen = "/homescreen";
+  static const String sellscreen = "/sellscreen";
+  static const String myaddsscreen = "/myaddsscreen";
+  static const String accountscreen = "/accountscreen";
+  static const String categoryscreen = "/categoryscreen";
+  static const String signupscreen = "/signupscreen";
+  static const String home = "/home";
+  static const String forgetpassword = "/forgetpassword";
+  static const String productscreen = "/productscreen";
+  static const String editproductscreen = "/editproductscreen";
+  static const String sellerScreen = "/sellerScreen";
+  static const String editprofile = "/editprofile";
 
   static List<GetPage> routs = [
     GetPage(
@@ -107,6 +113,16 @@ class AppRouter {
       name: editprofile,
       page: () => EditProfileScreen(),
       binding: EditProfileScreenBinding(),
+    ),
+    GetPage(
+      name: editproductscreen,
+      page: () => EditProductScreen(),
+      binding: EditProductScreenBinding(),
+    ),
+    GetPage(
+      name: sellerScreen,
+      page: () => SellerScreen(),
+      binding: SellerBinding(),
     ),
   ];
 }

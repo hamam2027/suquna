@@ -1,16 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
+import 'package:suquna/acore/databases/cache/cache_helper.dart';
 import 'package:suquna/approuter/approuter.dart';
-import 'package:suquna/componant/sharedwidgets.dart';
 import 'package:suquna/constant/appcolor.dart';
+import 'package:suquna/constant/constant_text.dart';
 import 'package:suquna/constant/localization.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await GetStorage.init();
+  // await GetStorag.init();
+  await Cashhelper.init();
+
+  // var GetStorag = GetStorag();
 
   runApp(const MyApp());
+  token = await Cashhelper.grtdata(key: "token");
+  id = await Cashhelper.grtdata(key: "id");
+  // id = GetStorag.read("id");
+  print(token);
+  print(id);
+  if (await Cashhelper.grtdata(key: "lang") == null) {
+    await Cashhelper.saveData(
+      key: "lang",
+      value: Get.deviceLocale.toString(),
+    );
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -19,21 +33,17 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    var getstorage = GetStorage();
-    token = getstorage.read("token");
-    print(token);
-    if (getstorage.read("lang") == null) {
-      getstorage.write("lang", Get.deviceLocale);
-    }
+    String langCode = Cashhelper.grtdata(key: "lang") ?? "ar";
+    Locale locale = Locale(langCode.split('_').first);
+    print(locale);
 
     return GetMaterialApp(
-      textDirection: getstorage.read("lang") == "en_US"
-          ? TextDirection.ltr
-          : TextDirection.rtl,
+      textDirection:
+          langCode == "en_US" ? TextDirection.ltr : TextDirection.rtl,
       translations: Translate(),
-      locale: Locale(getstorage.read("lang")),
+      locale: locale,
       debugShowCheckedModeBanner: false,
-      title: "Soaqna".tr,
+      title: "New_Soaqna".tr,
       theme: ThemeData(
         appBarTheme: AppBarTheme(
             backgroundColor: Colors.transparent,
@@ -48,3 +58,10 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+// AZXCas!@#325
+// maher@h.com
+// hamama@flutter.com
+//   ASDwer@#125
+
+  // hamed@gmail.com
+  // As@#$1236589

@@ -1,12 +1,12 @@
 import 'dart:io';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
-import 'package:suquna/acore/api/api_consumer.dart';
-import 'package:suquna/acore/api/dio_consumer.dart';
+import 'package:suquna/approuter/approuter.dart';
+import 'package:suquna/approuter/network_info.dart';
+import 'package:suquna/constant/appcolor.dart';
 import 'package:suquna/constant/applinks.dart';
 
 class SignUpController extends GetxController {
@@ -15,24 +15,28 @@ class SignUpController extends GetxController {
   final ImagePicker picker = ImagePicker();
   File? imagefile;
   XFile? image;
-  List<XFile>? imagess;
   TextEditingController emailcontroller = TextEditingController();
   TextEditingController passwordcontroller = TextEditingController();
   TextEditingController conpasswordcontroller = TextEditingController();
   TextEditingController phonecontroller = TextEditingController();
   TextEditingController usernamecontroller = TextEditingController();
   TextEditingController datecontroller = TextEditingController();
-  GlobalKey<FormState> formkey = GlobalKey();
-
+  GlobalKey<FormState> signUpKey = GlobalKey();
+  bool isload = false;
   FocusNode emailfocus = FocusNode();
   FocusNode passwordfocus = FocusNode();
   FocusNode usernamefocus = FocusNode();
   FocusNode conpasswordfocus = FocusNode();
   FocusNode phonfocus = FocusNode();
-  ApiConsumer dio = DioConsumer(dio: Dio());
+
   signUpUser() async {
-    var request =
-        http.MultipartRequest('POST', Uri.parse(ApiLinks.registrationApi));
+    isload = true;
+    update();
+
+    var uri = Uri.parse(ApiLinks.registrationApi);
+    var request = http.MultipartRequest('POST', uri);
+
+    // Add text fields
     request.fields.addAll({
       "name": usernamecontroller.text,
       "phone": phonecontroller.text,
@@ -43,35 +47,44 @@ class SignUpController extends GetxController {
       "dob": datecontroller.text,
       "address": cuntry!,
     });
-    request.files
-        .add(await http.MultipartFile.fromPath('avatar', "${image!.path}"));
 
+    // Add image file if exists
+    if (imagefile != null) {
+      request.files
+          .add(await http.MultipartFile.fromPath('avatar', imagefile!.path));
+    }
+
+    // Send request
     var response = await request.send();
 
     if (response.statusCode == 200) {
-      print(await response.stream.bytesToString());
+      showToust(
+          message: "تم انشاء الحساب بنجاح",
+          textcolor: AppColors.whiteClr,
+          backgroundclr: AppColors.successClr);
+      Get.offAllNamed(AppRouter.signinscreen);
+      var responseBody = await http.Response.fromStream(response);
+      print(responseBody.body);
+
+      isload = false;
+      update();
     } else {
-      print(response.reasonPhrase);
+      var responseBody = await http.Response.fromStream(response);
+      print(responseBody.body);
+      showToust(
+          message: responseBody.body,
+          textcolor: AppColors.whiteClr,
+          backgroundclr: AppColors.successClr);
+
+      isload = false;
+      update();
     }
+    isload = false;
+    update();
   }
-//hamama@flutter.com
-  // ASDwer@#125
-
-  // hamed@gmail.com
-  // As@#$1236589
-
-  //   try {
-  //     var response =
-  //         await http.post(Uri.parse(ApiLinks.registrationApi), body: {
-
-  //     });
-  //   } catch (e) {
-  //     print(e.toString());
-  //   }
-  // }
 
   takephotoFromGalary() async {
-    imagess = await picker.pickMultipleMedia(imageQuality: 80, limit: 10);
+    image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       imagefile = File(image!.path);
     }
@@ -83,32 +96,30 @@ class SignUpController extends GetxController {
     image = await picker.pickImage(source: ImageSource.camera);
     if (image != null) {
       imagefile = File(image!.path);
-      print(imagefile!.readAsBytes());
     }
     update();
   }
+
+  @override
+  void onClose() {
+    clearDataForm();
+    super.onClose();
+  }
+
+  clearDataForm() {
+    emailcontroller.clear();
+    passwordcontroller.clear();
+    conpasswordcontroller.clear();
+    phonecontroller.clear();
+    usernamecontroller.clear();
+    datecontroller.clear();
+  }
 }
 
+// AZXCas!@#325
+// maher@h.com
+// hamama@flutter.com
+//   ASDwer@#125
 
-
-
-//  var response = await dio.post(ApiLinks.registrationApi, data: {
-//         "name": usernamecontroller.text,
-//         "phone": phonecontroller.text,
-//         "password": passwordcontroller.text,
-//         "password_confirmation": conpasswordcontroller.text,
-//         "email": emailcontroller.text,
-//         "gender": "1",
-//         "dob": "1990-06-12",
-//         "address": "egypt",
-//         "avatar": imagefile!
-//       }).then((value) {
-//         return value;
-//       });
-//     } on ServerException catch (e) {
-//       // print(e.toString());
-//       showToust(
-//           message: e.errorModel.message!,
-//           textcolor: AppColors.whiteClr,
-//           backgroundclr: Colors.red);
-//     }
+  // hamed@gmail.com
+  // As@#$1236589

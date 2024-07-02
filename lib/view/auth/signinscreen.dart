@@ -89,7 +89,7 @@ class SignInScreen extends GetView<SignInController> {
                         height: divsize.height / 20,
                       ),
                       Form(
-                          key: controller.formkey,
+                          key: controller.signInKey,
                           child: Column(
                             children: [
                               MainformField(
@@ -123,7 +123,7 @@ class SignInScreen extends GetView<SignInController> {
                       ),
                       TextButton(
                         onPressed: () {
-                          Get.offNamed(
+                          Get.toNamed(
                             AppRouter.forgetpassword,
                           );
                         },
@@ -146,9 +146,9 @@ class SignInScreen extends GetView<SignInController> {
                               function: () async {
                                 _hideKeyboard();
                                 print("111");
-                                if (controller.formkey.currentState!
+                                if (controller.signInKey.currentState!
                                     .validate()) {
-                                  await controller.loginWithdio();
+                                  await controller.loginWithHttp();
                                 }
                               },
                             ),
@@ -156,7 +156,7 @@ class SignInScreen extends GetView<SignInController> {
                         chil: "Continue as guest".tr,
                         colo: AppColors.whiteClr,
                         function: () {
-                          Get.offNamed(AppRouter.home);
+                          // Get.offNamed(AppRouter.home);
                         },
                       ),
                       SizedBox(

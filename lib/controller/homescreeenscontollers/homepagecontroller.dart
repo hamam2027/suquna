@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:suquna/approuter/approuter.dart';
 import 'package:suquna/controller/homescreeenscontollers/accountscreencontroller.dart';
 import 'package:suquna/controller/homescreeenscontollers/chatscreencontroller.dart';
 import 'package:suquna/controller/homescreeenscontollers/homescreencontroller.dart';
@@ -12,13 +13,6 @@ import 'package:suquna/view/homepagescreens/myads/myadd.dart';
 import 'package:suquna/view/homepagescreens/sell/sellscreen.dart';
 
 class HomePageController extends GetxController {
-  // int currentindex = 0;
-  // changCurrentIndex(index) {
-
-  //   currentindex = index;
-  //   update();
-  // }
-
   List<Widget> pagess = [
     HomeScreen(),
     ChatScreen(),
@@ -107,6 +101,28 @@ class HomePageController extends GetxController {
         );
 
         break;
+    }
+  }
+
+  Widget MyWidget({required String caseString}) {
+    String resultString;
+    switch (caseString) {
+      case AppRouter.homescreen:
+        return HomeScreen();
+      // break;
+      case AppRouter.chatscreen:
+        return ChatScreen();
+
+      case AppRouter.sellscreen:
+        return SellScreen();
+
+      case AppRouter.myaddsscreen:
+        return MyAddScreen();
+
+      case AppRouter.accountscreen:
+        return AccountScreen();
+      default:
+        return HomeScreen();
     }
   }
 }

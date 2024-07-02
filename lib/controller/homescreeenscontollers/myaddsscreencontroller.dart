@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:suquna/componant/sharedwidgets.dart';
 import 'package:suquna/constant/applinks.dart';
+import 'package:suquna/constant/constant_text.dart';
 import 'package:suquna/model/myadds_model/my_ads_model.dart';
 
 class MyAddsScreenController extends GetxController {
@@ -35,7 +35,7 @@ class MyAddsScreenController extends GetxController {
   deleteMyAdd(String id) async {
     var response = await http.delete(
         Uri.parse("${ApiLinks.addGetUpdateProducts}/:$id"),
-        headers: header);
+        headers: {"Authorization": "Bearer $token"});
     if (response.statusCode == 200) {
       print(response.body);
       getMyadds();

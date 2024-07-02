@@ -12,6 +12,7 @@ class ApiLinks {
   static const String getUserData = '$base/profile';
   static const String updateUserData = '$base/profile';
   static const String getMyadds = '$base/profile/products';
+  static const String getuserfavorate = '$base/profile/wishlist';
   static const String selectCategory = '$base/select-category';
 
   static const String getCategoriesProduct = '$base/categories';

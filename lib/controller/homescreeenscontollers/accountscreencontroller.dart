@@ -1,62 +1,169 @@
-import 'package:dio/dio.dart';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:suquna/acore/api/dio_consumer.dart';
-import 'package:suquna/acore/errors/expentions.dart';
-import 'package:suquna/approuter/approuter.dart';
+import 'package:suquna/acore/databases/cache/cache_helper.dart';
 import 'package:suquna/approuter/network_info.dart';
-import 'package:suquna/componant/sharedwidgets.dart';
 import 'package:suquna/constant/appcolor.dart';
 import 'package:suquna/constant/applinks.dart';
+import 'package:suquna/constant/constant_text.dart';
 import 'package:suquna/model/accontmodels/userdatamodel.dart';
+import 'package:suquna/model/myadds_model/my_ads_model.dart';
 
 class AccountScreenController extends GetxController {
   String name = "hamam";
-  DioConsumer dio = DioConsumer(dio: Dio());
-  var getstorage = GetStorage();
+
+  // var GetStorag = GetStorag();
   ProfileUserData? userData;
   bool isloding = false;
+  bool myAdd = false;
+  bool myFav = false;
+  bool lodfavAndADD = false;
+  MyAddsModel? _myAddsModel;
+  List<Items>? myadds = [];
+  List<Items>? myFavorate = [];
   getUserData() async {
+    print("==================================");
     isloding = true;
     update();
+
     try {
-      var response = await dio.get(ApiLinks.getUserData,
-          headers: {"Authorization": "Bearer $token"}).then((value) {
-        userData = ProfileUserData.fromJson(value);
-        print(userData!.email);
-      });
-    } on ServerException catch (e) {
+      print(token);
+      var response = await http.get(Uri.parse(ApiLinks.getUserData),
+          headers: {"Authorization": "Bearer $token"});
+      if (response.statusCode == 200) {
+        Map<String, dynamic> data = jsonDecode(response.body);
+
+        userData = ProfileUserData.fromJson(data);
+      } else {
+        print(response.body);
+      }
+    } catch (e) {
       print(e.toString());
-      showToust(
-          message: e.errorModel.message!,
-          textcolor: AppColors.whiteClr,
-          backgroundclr: Colors.red);
     }
     isloding = false;
     update();
   }
 
-  logOut() async {
-    var response = await http.post(Uri.parse(ApiLinks.logoutApi), headers: {
-      "Authorization": "Bearer $token",
-    });
+  Future<http.Response> UserlogOut() async {
+    print(token);
+    http.Response response = await http.post(Uri.parse(ApiLinks.logoutApi),
+        headers: {"Authorization": "Bearer $token"});
     if (response.statusCode == 200) {
-      getstorage.remove("token");
-      Get.offNamed(AppRouter.signinscreen);
+      token = null;
+      id = null;
+      Cashhelper.cleardata(
+        key: "token",
+      );
+      Cashhelper.cleardata(
+        key: "id",
+      );
+      // GetStorag.remove("token");
+      // GetStorag.remove("id");
+      print(token);
+      print(id);
+
+      update();
+      return response;
     } else {
+      print(token);
       showToust(
-          message: "هناك خطا ما ",
+          message: response.body,
           textcolor: AppColors.whiteClr,
           backgroundclr: AppColors.redcolor);
+      update();
+      return response;
     }
   }
 
   @override
-  void onInit() {
+  void onInit() async {
     print("accont Screen");
-    getUserData();
+    print(token!);
+    await getUserData();
+    // await getUserFavorate();
+    // await getMyaddsAccount();
     super.onInit();
+  }
+
+  getMyaddsAccount() async {
+    myAdd = true;
+    myFav = false;
+    lodfavAndADD = true;
+    update();
+    myFavorate = [];
+    update();
+    var response = await http.get(Uri.parse(ApiLinks.getMyadds),
+        headers: {"Authorization": "Bearer $token"});
+    if (response.statusCode == 200) {
+      Map<String, dynamic> data = jsonDecode(response.body);
+      _myAddsModel = MyAddsModel.fromJson(data);
+
+      myadds = _myAddsModel!.items!;
+      lodfavAndADD = false;
+      update();
+    } else {
+      print("error");
+    }
+    update();
+  }
+
+  getUserFavorate() async {
+    myFav = true;
+    myAdd = false;
+    lodfavAndADD = true;
+    update();
+    myadds = [];
+    update();
+    var response = await http.get(Uri.parse(ApiLinks.getuserfavorate),
+        headers: {"Authorization": "Bearer $token"});
+    if (response.statusCode == 200) {
+      Map<String, dynamic> data = jsonDecode(response.body);
+      _myAddsModel = MyAddsModel.fromJson(data);
+
+      myFavorate = _myAddsModel!.items!;
+      print(myFavorate!.length);
+      lodfavAndADD = false;
+      update();
+      // showToust(
+      //     message: "succes",
+      //     textcolor: Colors.white,
+      //     backgroundclr: Colors.green);
+    } else {
+      showToust(
+          message: "failed",
+          textcolor: Colors.white,
+          backgroundclr: Colors.red);
+    }
+  }
+
+  int ud = -1;
+  removeFromFavorate(
+    String id,
+    int idi,
+  ) async {
+    lodfavAndADD = true;
+    ud = idi;
+    update();
+    var response = await http.post(
+        Uri.parse("${ApiLinks.addGetUpdateProducts}/$id/wishlist"),
+        headers: {"Authorization": "Bearer $token"});
+
+    if (response.statusCode == 200) {
+      await getUserFavorate();
+      update();
+      showToust(
+          message: "تمت التعديل",
+          textcolor: AppColors.whiteClr,
+          backgroundclr: AppColors.successClr);
+    } else {
+      showToust(
+          message: "فشل التعديل",
+          textcolor: AppColors.whiteClr,
+          backgroundclr: AppColors.redcolor);
+    }
+
+    update();
   }
 }

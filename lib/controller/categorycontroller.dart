@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:suquna/componant/sharedwidgets.dart';
 import 'package:suquna/constant/applinks.dart';
+import 'package:suquna/constant/constant_text.dart';
 import 'package:suquna/model/category_products/category_product_model.dart';
 
 class CategoryScreenController extends GetxController {

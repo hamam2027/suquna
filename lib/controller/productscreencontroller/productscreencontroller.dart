@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:suquna/componant/sharedwidgets.dart';
 import 'package:suquna/constant/applinks.dart';
+import 'package:suquna/constant/constant_text.dart';
 import 'package:suquna/model/product_model/productmodel.dart';
 
 class ProductScreenController extends GetxController {
@@ -11,7 +11,7 @@ class ProductScreenController extends GetxController {
   late String productid;
   @override
   void onInit() {
-    productid = Get.arguments["productId"].toString();
+    productid = Get.arguments["id"].toString();
     print(productid);
 
     getProductDetailse();
@@ -22,7 +22,7 @@ class ProductScreenController extends GetxController {
     try {
       var response = await http.get(
         Uri.parse("${ApiLinks.addGetUpdateProducts}/$productid"),
-        headers: header,
+        headers: {"Authorization": "Bearer $token"},
       );
       if (response.statusCode == 200) {
         Map<String, dynamic> data = jsonDecode(response.body);

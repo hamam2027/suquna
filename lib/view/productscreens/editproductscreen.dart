@@ -3,19 +3,18 @@ import 'package:get/get.dart';
 import 'package:suquna/componant/sharedwidgets.dart';
 import 'package:suquna/constant/appcolor.dart';
 import 'package:suquna/constant/appstyle.dart';
-import 'package:suquna/controller/homescreeenscontollers/sellscreencontroller.dart';
+import 'package:suquna/controller/productscreencontroller/editproductscreencontroller.dart';
 
-class SellScreen extends StatelessWidget {
-  SellScreen({super.key});
+class EditProductScreen extends GetView<EditProductScreenController> {
+  const EditProductScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    SellScreenController controller = Get.find();
-
     Size devsiz = MediaQuery.of(context).size;
-    return Scaffold(
+    return MyMainContainer(
+        child: Scaffold(
       appBar: AppBar(
-        title: Text("اعلان جديد"),
+        title: Text("تعديل الاعلان"),
       ),
       body: GestureDetector(
         onTap: () {
@@ -31,15 +30,15 @@ class SellScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                GetBuilder<SellScreenController>(builder: (controller) {
+                GetBuilder<EditProductScreenController>(builder: (controller) {
                   return Form(
-                      key: controller.sellKey,
+                      key: controller.editproductKey,
                       child: Column(
                         children: [
                           Row(
                             children: [
                               Text(
-                                "اختر الفئة",
+                                "تعديل الفئة",
                                 style: AppStyle.normalw,
                               ),
                               SizedBox(
@@ -108,7 +107,7 @@ class SellScreen extends StatelessWidget {
                             },
                             preicon: Icons.store,
                             hint: "اسم المنتج",
-                            controller: controller.nameController,
+                            controller: controller.editnameController,
                             type: TextInputType.text,
                             focusNode: controller.namefucas,
                           ),
@@ -122,7 +121,7 @@ class SellScreen extends StatelessWidget {
                             },
                             preicon: Icons.price_check_outlined,
                             hint: "سعر",
-                            controller: controller.priceController,
+                            controller: controller.editpriceController,
                             type: TextInputType.number,
                             focusNode: controller.pricefucas,
                           ),
@@ -137,7 +136,7 @@ class SellScreen extends StatelessWidget {
                             maxLin: 7,
                             // preicon: Icons.location_on,
                             hint: "وصف المنتج",
-                            controller: controller.descriptionController,
+                            controller: controller.editdescriptionController,
                             type: TextInputType.text,
                             focusNode: controller.descfucas,
                           ),
@@ -146,7 +145,7 @@ class SellScreen extends StatelessWidget {
                 }),
 
                 // للصور
-                GetBuilder<SellScreenController>(builder: (controller) {
+                GetBuilder<EditProductScreenController>(builder: (controller) {
                   return Container(
                       width: double.infinity,
                       decoration: BoxDecoration(
@@ -242,11 +241,11 @@ class SellScreen extends StatelessWidget {
                             ));
                 }),
                 MainButton(
-                    chil: "post add",
+                    chil: "حفظ التغييرات",
                     colo: AppColors.secondaryClr,
                     function: () {
-                      if (controller.sellKey.currentState!.validate()) {
-                        controller.addProdactFromSell();
+                      if (controller.editproductKey.currentState!.validate()) {
+                        controller.editProdact();
                       }
                     })
               ],
@@ -254,6 +253,6 @@ class SellScreen extends StatelessWidget {
           ),
         ),
       ),
-    );
+    ));
   }
 }

@@ -1,39 +1,41 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:dio/dio.dart';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:suquna/acore/api/dio_consumer.dart';
-import 'package:suquna/acore/errors/expentions.dart';
+import 'package:http/http.dart' as http;
+import 'package:suquna/acore/databases/cache/cache_helper.dart';
 import 'package:suquna/approuter/approuter.dart';
 import 'package:suquna/approuter/network_info.dart';
-import 'package:suquna/componant/sharedwidgets.dart';
 import 'package:suquna/constant/appcolor.dart';
 import 'package:suquna/constant/applinks.dart';
+import 'package:suquna/constant/constant_text.dart';
 import 'package:suquna/model/authmodels/usermodel.dart';
 
 class SignInController extends GetxController {
-  final DioConsumer dio = DioConsumer(dio: Dio());
   bool isloding = false;
 
   @override
-  void onInit() {
-    local = Locale(getstorage.read("lang"));
+  void onInit() async {
+    print(token);
+    local = Locale(await Cashhelper.grtdata(key: "lang"));
+
+    update();
   }
 
-  GlobalKey<FormState> formkey = GlobalKey();
+  GlobalKey<FormState> signInKey = GlobalKey();
   TextEditingController emailcontroller = TextEditingController();
   TextEditingController passwordcontroller = TextEditingController();
   FocusNode emailfocus = FocusNode();
   FocusNode passwordfocus = FocusNode();
 
   UserModel? userModel;
-  var getstorage = GetStorage();
+  // var GetStorag = GetStorag();
   Locale? local;
 
   changlangarco() async {
     if (local == Locale("en_US")) {
-      getstorage.write('lang', "ar_EG");
+      Cashhelper.saveData(key: "lang", value: "ar_EG");
+      // GetStorag.write('lang', "ar_EG");
       local = const Locale("ar_EG");
       Get.updateLocale(local!);
     } else {
@@ -43,7 +45,8 @@ class SignInController extends GetxController {
 
   changlangenco() async {
     if (local == Locale("ar_EG")) {
-      getstorage.write('lang', "en_US");
+      Cashhelper.saveData(key: "lang", value: "en_US");
+      // GetStorag.write('lang', "en_US");
       local = const Locale("en_US");
       Get.updateLocale(local!);
     } else {
@@ -51,34 +54,70 @@ class SignInController extends GetxController {
     }
   }
 
-  loginWithdio() async {
+  Future loginWithHttp() async {
     isloding = true;
     update();
-    try {
-      final response = await dio.post(ApiLinks.loginApi, data: {
-        "email": emailcontroller.text,
-        "password": passwordcontroller.text
-      }, headers: {}).then((value) {
-        userModel = UserModel.fromJson(value);
-        print(userModel!.accessToken);
+    var response;
 
-        token = userModel!.accessToken;
-        getstorage.write('token', token);
-        Get.offNamed(AppRouter.home);
-      });
-    } on ServerException catch (e) {
+    response = await http.post(
+      Uri.parse(ApiLinks.loginApi),
+      body: {
+        "email": emailcontroller.text,
+        "password": passwordcontroller.text,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      print(response.body);
+      Map<String, dynamic> data = jsonDecode(response.body);
+      userModel = UserModel.fromJson(data);
+      print(userModel!.accessToken);
+
+      token = userModel!.accessToken;
+      await Cashhelper.saveData(key: "token", value: token);
+
+      id = userModel!.user!.id;
+
+      await Cashhelper.saveData(key: "id", value: id);
+
       showToust(
-          message: e.errorModel.message!,
-          textcolor: AppColors.whiteClr,
-          backgroundclr: Colors.red);
+        message: "Success",
+        textcolor: AppColors.whiteClr,
+        backgroundclr: AppColors.successClr,
+      );
+
+      isloding = false;
+      update();
+      Get.offAllNamed(AppRouter.home);
+
+      return response;
+    } else {
+      showToust(
+        message: response.body.toString(),
+        textcolor: AppColors.whiteClr,
+        backgroundclr: Colors.red,
+      );
+      isloding = false;
+      update();
+      return response;
     }
-    isloding = false;
-    update();
   }
 
   @override
   void onClose() {
     emailcontroller.clear();
     passwordcontroller.clear();
+    super.onClose();
   }
 }
+// AZXCas!@#325
+// maher@h.com
+// hamama@flutter.com
+//   ASDwer@#125
+
+// hamed@gmail.com
+// As@#$1236589
+// ASD123@#$
+// 89|NsLzV3Qv4Hypxl91ZJfB8J1RmH8DStuIGiutmsDQe5a3f87a
+
+

@@ -46,103 +46,7 @@ class EditProfileScreen extends GetView<EditProfileScreenController> {
                           radius: 75,
                         );
                       }),
-                      CircleAvatar(
-                        child: IconButton(
-                            onPressed: () async {
-                              Get.bottomSheet(Container(
-                                  padding: EdgeInsets.all(20),
-                                  decoration: BoxDecoration(
-                                      gradient: AppStyle.linearGradient),
-                                  height: 200,
-                                  // color: Colors.white,
-                                  width: double.infinity,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "صورة الملف الشخصي",
-                                        style: AppStyle.normalw,
-                                      ),
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
-                                        children: [
-                                          Column(
-                                            children: [
-                                              GestureDetector(
-                                                onTap: () {
-                                                  controller
-                                                      .takephotoFromCamera();
-                                                  Get.back();
-                                                },
-                                                child: Container(
-                                                    padding: EdgeInsets.all(10),
-                                                    decoration: BoxDecoration(
-                                                        border: Border
-                                                            .fromBorderSide(
-                                                                BorderSide(
-                                                                    color: Colors
-                                                                        .white)),
-                                                        shape: BoxShape.circle),
-                                                    child: Icon(
-                                                      Icons.camera_alt_outlined,
-                                                      size: 40,
-                                                      color: AppColors.whiteClr,
-                                                    )),
-                                              ),
-                                              SizedBox(
-                                                height: 10,
-                                              ),
-                                              Text(
-                                                "الكاميرا",
-                                                style: AppStyle.smallw,
-                                              ),
-                                            ],
-                                          ),
-                                          Column(
-                                            children: [
-                                              GestureDetector(
-                                                onTap: () {
-                                                  controller
-                                                      .takephotoFromGalary();
-                                                  Get.back();
-                                                },
-                                                child: Container(
-                                                    padding: EdgeInsets.all(10),
-                                                    decoration: BoxDecoration(
-                                                        border: Border
-                                                            .fromBorderSide(
-                                                                BorderSide(
-                                                                    color: Colors
-                                                                        .white)),
-                                                        shape: BoxShape.circle),
-                                                    child: Icon(
-                                                      Icons.image,
-                                                      size: 40,
-                                                      color: AppColors.whiteClr,
-                                                    )),
-                                              ),
-                                              SizedBox(
-                                                height: 10,
-                                              ),
-                                              Text(
-                                                "المعرض",
-                                                style: AppStyle.smallw,
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  )));
-                              // controller.takephotoFromCamera();
-                            },
-                            icon: Icon(Icons.camera_alt)),
-                      )
+                      TakeImageWidget(controller: controller)
                     ],
                   ),
                 ),
@@ -150,82 +54,220 @@ class EditProfileScreen extends GetView<EditProfileScreenController> {
               SizedBox(
                 height: 30,
               ),
-              MainformField(
-                hint: "الاسم",
-              ),
-              MainformField(
-                hint: "رقم الهاتف",
-              ),
-              FormForEditCountry(
-                onchang: (value) {
-                  controller.changCountry(value);
-                  print(controller.editCountry);
-                },
-              ),
-              MainformField(),
-              MainformField(),
-              MainformField(),
-              SizedBox(
-                height: devsiz.height / 15,
-              ),
-              Row(
-                children: [
-                  Text(
-                    "اختر النوع",
-                    style: AppStyle.normalw,
-                  ),
-                  SizedBox(
-                    width: 40,
-                  ),
-                  Expanded(
-                    child: Container(
-                      margin: EdgeInsets.symmetric(vertical: 5),
-                      clipBehavior: Clip.antiAlias,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          color: AppColors.primaryClr2),
-                      child: DropdownButtonFormField(
-                          style: TextStyle(color: AppColors.whiteClr),
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          validator: (value) {
-                            return value == null ? 'يجب اختيار النوع' : null;
+              GetBuilder<EditProfileScreenController>(builder: (controller) {
+                return Form(
+                    key: controller.editProfileKey,
+                    child: Column(
+                      children: [
+                        MainformField(
+                          controller: controller.editNamecontroller,
+                          hint: "الاسم",
+                        ),
+                        MainformField(
+                          controller: controller.editphonecontroller,
+                          hint: "رقم الهاتف",
+                        ),
+                        FormForEditCountry(
+                          edicountry: controller.editCountry,
+                          onchang: (value) {
+                            controller.changCountry(value);
+                            print(controller.editCountry);
                           },
-                          icon: Icon(
-                            Icons.keyboard_arrow_down,
-                            color: Colors.white,
-                          ),
-                          iconSize: 35,
-                          dropdownColor: AppColors.primaryClr2,
-                          borderRadius: BorderRadius.circular(20),
-                          padding: EdgeInsets.symmetric(horizontal: 15),
-                          decoration: InputDecoration(
-                              errorStyle: AppStyle.smallw,
-                              border: InputBorder.none),
-                          items: List.generate(
-                              genderlist.length,
-                              (index) => DropdownMenuItem<String>(
-                                  value: genderlist[index]["gender"],
-                                  child: Text(genderlist[index]["text"]))),
-                          onChanged: (String? v) {
-                            controller.changgender(v);
-                            print(v);
-                            // controller.changeCatId(v!);
-                          }),
-                    ),
-                  ),
-                ],
-              ),
-              MainButton(
-                  chil: "حفظ التغييرات",
-                  colo: AppColors.secondaryClr,
-                  function: () {
-                    controller.editProfileDetailse();
-                  })
+                        ),
+
+                        FormForDate(
+                          controller: controller.editdatecontroller,
+                          calendericon: Icons.calendar_month,
+                          datepic: () async {
+                            controller.changeDate(context);
+                          },
+                        ),
+                        // MainformField(),
+                        // MainformField(),
+                        SizedBox(
+                          height: devsiz.height / 15,
+                        ),
+                        GenderWidget(controller: controller),
+                      ],
+                    ));
+              }),
+              GetBuilder<EditProfileScreenController>(builder: (controller) {
+                return controller.isloode
+                    ? ShimerLodingForCo()
+                    : MainButton(
+                        chil: "حفظ التغييرات",
+                        colo: AppColors.secondaryClr,
+                        function: () {
+                          if (controller.editProfileKey.currentState!
+                              .validate()) {
+                            controller.editProfileDetailse();
+                          }
+                        });
+              })
             ],
           ),
         ),
       ),
     ));
+  }
+}
+
+class GenderWidget extends StatelessWidget {
+  const GenderWidget({
+    super.key,
+    required this.controller,
+  });
+
+  final EditProfileScreenController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Text(
+          "اختر النوع",
+          style: AppStyle.normalw,
+        ),
+        SizedBox(
+          width: 40,
+        ),
+        Expanded(
+          child: Container(
+            margin: EdgeInsets.symmetric(vertical: 5),
+            clipBehavior: Clip.antiAlias,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                color: AppColors.primaryClr2),
+            child: DropdownButtonFormField(
+                value: controller.gender,
+                style: TextStyle(color: AppColors.whiteClr),
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: (value) {
+                  return value == null ? 'يجب اختيار النوع' : null;
+                },
+                icon: Icon(
+                  Icons.keyboard_arrow_down,
+                  color: Colors.white,
+                ),
+                iconSize: 35,
+                dropdownColor: AppColors.primaryClr2,
+                borderRadius: BorderRadius.circular(20),
+                padding: EdgeInsets.symmetric(horizontal: 15),
+                decoration: InputDecoration(
+                    errorStyle: AppStyle.smallw, border: InputBorder.none),
+                items: List.generate(
+                    genderlist.length,
+                    (index) => DropdownMenuItem<String>(
+                        value: genderlist[index]["gender"],
+                        child: Text(genderlist[index]["text"]))),
+                onChanged: (String? v) {
+                  controller.changgender(v);
+                  print(v);
+                  // controller.changeCatId(v!);
+                }),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class TakeImageWidget extends StatelessWidget {
+  const TakeImageWidget({
+    super.key,
+    required this.controller,
+  });
+
+  final EditProfileScreenController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return CircleAvatar(
+      child: IconButton(
+          onPressed: () async {
+            Get.bottomSheet(Container(
+                padding: EdgeInsets.all(20),
+                decoration: BoxDecoration(gradient: AppStyle.linearGradient),
+                height: 200,
+                // color: Colors.white,
+                width: double.infinity,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "صورة الملف الشخصي",
+                      style: AppStyle.normalw,
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Column(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                controller.takephotoFromCamera();
+                                Get.back();
+                              },
+                              child: Container(
+                                  padding: EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                      border: Border.fromBorderSide(
+                                          BorderSide(color: Colors.white)),
+                                      shape: BoxShape.circle),
+                                  child: Icon(
+                                    Icons.camera_alt_outlined,
+                                    size: 40,
+                                    color: AppColors.whiteClr,
+                                  )),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              "الكاميرا",
+                              style: AppStyle.smallw,
+                            ),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                controller.takephotoFromGalary();
+                                Get.back();
+                              },
+                              child: Container(
+                                  padding: EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                      border: Border.fromBorderSide(
+                                          BorderSide(color: Colors.white)),
+                                      shape: BoxShape.circle),
+                                  child: Icon(
+                                    Icons.image,
+                                    size: 40,
+                                    color: AppColors.whiteClr,
+                                  )),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              "المعرض",
+                              style: AppStyle.smallw,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                )));
+            // controller.takephotoFromCamera();
+          },
+          icon: Icon(Icons.camera_alt)),
+    );
   }
 }
 
@@ -236,10 +278,12 @@ List<Map> genderlist = [
 
 class FormForEditCountry extends StatelessWidget {
   final Function(String?) onchang;
+  final String? edicountry;
 
   FormForEditCountry({
     Key? key,
     required this.onchang,
+    this.edicountry,
   }) : super(key: key);
 
   @override
@@ -249,15 +293,10 @@ class FormForEditCountry extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
       child: DropdownButtonFormField(
+          value: edicountry,
           autovalidateMode: AutovalidateMode.onUserInteraction,
-          validator: (value) {
-            if (value!.isEmpty) {
-              return "هذا الحقل مطلوب";
-            } else {
-              return null;
-            }
-          },
-          isExpanded: true,
+
+          // isExpanded: true,
           dropdownColor: AppColors.primaryClr2,
           style: AppStyle.normalw,
           borderRadius: BorderRadius.circular(15),
@@ -282,8 +321,8 @@ class FormForEditCountry extends StatelessWidget {
               child: Text("syria"),
             ),
             DropdownMenuItem(
-              value: "turky",
-              child: Text("turky"),
+              value: "Turkish",
+              child: Text("Turkish"),
             ),
             DropdownMenuItem(
               value: "irak",
@@ -292,10 +331,6 @@ class FormForEditCountry extends StatelessWidget {
           ],
           onChanged: (String? value) {
             onchang(value);
-
-            // controller.cuntry = v;
-            // print(controller.cuntry);
-            // controller.update();
           }),
     );
   }

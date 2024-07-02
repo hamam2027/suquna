@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
@@ -10,14 +9,21 @@ import 'package:suquna/approuter/network_info.dart';
 import 'package:suquna/constant/appcolor.dart';
 import 'package:suquna/constant/applinks.dart';
 import 'package:suquna/constant/constant_text.dart';
+import 'package:suquna/controller/homescreeenscontollers/accountscreencontroller.dart';
+import 'package:suquna/controller/homescreeenscontollers/homescreencontroller.dart';
+import 'package:suquna/controller/homescreeenscontollers/myaddsscreencontroller.dart';
+import 'package:suquna/controller/productscreencontroller/productscreencontroller.dart';
 import 'package:suquna/model/sellModels/addprodactmodel.dart';
 import 'package:suquna/model/sellModels/sellmodel.dart';
 
-class SellScreenController extends GetxController {
+class EditProductScreenController extends GetxController {
   int? categoryId;
-  GlobalKey<FormState> sellKey = GlobalKey();
-  // MyAddsScreenController myaddcontroller = Get.find();
-  // HomeScreenController homeScreenController = Get.find();
+  String? productId;
+  GlobalKey<FormState> editproductKey = GlobalKey();
+  ProductScreenController productScreenController = Get.find();
+  HomeScreenController homeScreenController = Get.find();
+  MyAddsScreenController myAddController = Get.find();
+  AccountScreenController accountController = Get.find();
 
   SelectCatModel? selectCatModel;
   RxList<SelectCatModel> selectList = <SelectCatModel>[].obs;
@@ -25,9 +31,10 @@ class SellScreenController extends GetxController {
   final FocusNode pricefucas = FocusNode();
   final FocusNode descfucas = FocusNode();
 
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController priceController = TextEditingController();
-  final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController editnameController = TextEditingController();
+  final TextEditingController editpriceController = TextEditingController();
+  final TextEditingController editdescriptionController =
+      TextEditingController();
   Addprodactmodel? addprodactmodel;
 
   @override
@@ -38,14 +45,10 @@ class SellScreenController extends GetxController {
   }
 
   @override
-  void onReady() {
-    print("SellScreen");
-    super.onReady();
-  }
-
-  @override
-  void onInit() {
-    getselectcategory();
+  void onInit() async {
+    productId = await Get.arguments["id"];
+    update();
+    editgetselectcategory();
 
     super.onInit();
   }
@@ -89,14 +92,13 @@ class SellScreenController extends GetxController {
   }
 
   clearData() {
-    nameController.clear();
-    priceController.clear();
-    descriptionController.clear();
+    editnameController.clear();
+    editpriceController.clear();
+    editdescriptionController.clear();
     image = null;
-    update();
   }
 
-  getselectcategory() async {
+  editgetselectcategory() async {
     print("select category requist");
     var response = await http.get(
       Uri.parse(ApiLinks.selectCategory),
@@ -115,15 +117,15 @@ class SellScreenController extends GetxController {
     }
   }
 
-  addProdactFromSell() async {
+  editProdact() async {
     if (image != null) {
       var request = http.MultipartRequest(
-          'POST', Uri.parse(ApiLinks.addGetUpdateProducts));
+          'POST', Uri.parse("${ApiLinks.addGetUpdateProducts}/$productId"));
       request.fields.addAll({
-        "name": nameController.text,
-        "price": priceController.text,
+        "name": editnameController.text,
+        "price": editpriceController.text,
         "category_id": categoryId.toString(),
-        "description": descriptionController.text,
+        "description": editdescriptionController.text,
       });
       request.files
           .add(await http.MultipartFile.fromPath('image', "${image!.path}"));
@@ -137,6 +139,11 @@ class SellScreenController extends GetxController {
           textcolor: AppColors.whiteClr,
           backgroundclr: AppColors.successClr,
         );
+        await homeScreenController.getAllcategory();
+        await productScreenController.getProductDetailse();
+
+        await accountController.getMyaddsAccount();
+        await myAddController.getMyadds();
         // homeScreenController.getAllcategory();
         // myaddcontroller.getMyadds();
       } else {

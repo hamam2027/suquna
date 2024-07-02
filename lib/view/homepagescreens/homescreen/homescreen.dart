@@ -1,15 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:neon_widgets/neon_widgets.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:suquna/approuter/approuter.dart';
 import 'package:suquna/constant/appcolor.dart';
 import 'package:suquna/constant/applinks.dart';
 import 'package:suquna/constant/appstyle.dart';
 import 'package:suquna/controller/homescreeenscontollers/homescreencontroller.dart';
+import 'package:suquna/view/homepagescreens/homescreen/homescreen_widgets/home_screen_drawer.dart';
+import 'package:suquna/view/homepagescreens/homescreen/homescreen_widgets/homescreen_loding.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -58,89 +58,7 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
         ),
-        drawer: Drawer(
-          shape: RoundedRectangleBorder(),
-          backgroundColor: AppColors.primaryDark,
-          child: SafeArea(
-            child: SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      Get.back();
-                    },
-                    icon: CircleAvatar(
-                      backgroundColor: AppColors.dangerClr,
-                      child: Icon(
-                        Icons.close,
-                        size: 30,
-                      ),
-                    ),
-                    color: AppColors.blackClr,
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  ...List.generate(
-                      6,
-                      (index) => Container(
-                            decoration: BoxDecoration(
-                                color: AppColors.whiteClr,
-                                borderRadius: BorderRadius.circular(15)),
-                            padding: EdgeInsets.all(20),
-                            margin: EdgeInsets.symmetric(
-                                vertical: 5, horizontal: 15),
-                            child: ListTile(
-                              leading: Image.asset(
-                                "assets/images/icon$index.png",
-                                width: 40,
-                              ),
-                              title: Text(drawestring[index].tr),
-                            ),
-                          )),
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    margin: const EdgeInsets.symmetric(vertical: 10),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(15)),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Change Language".tr,
-                        ),
-                        DropdownButtonFormField(
-                          value: "العربية",
-                          items: langDropdownItemsMenus,
-                          onChanged: (value) {
-                            var getstorage = GetStorage();
-                            late Locale local;
-                            if (value == 'English') {
-                              getstorage.write('lang', "en_US");
-                              local = const Locale("en_US");
-                              Get.updateLocale(local);
-                              // Get.appUpdate();
-                              print(local);
-                            } else {
-                              getstorage.write('lang', "ar_EG");
-                              local = const Locale("ar_EG");
-                              Get.updateLocale(local);
-                              // Get.appUpdate();
-                              print(local);
-                            }
-                          },
-                        )
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-        ),
+        drawer: HomeScreenDrawer(),
         body: SmartRefresher(
           enablePullDown: true,
           enablePullUp: true,
@@ -166,30 +84,6 @@ class HomeScreen extends StatelessWidget {
             physics: const BouncingScrollPhysics(),
             child: Column(
               children: [
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //   children: [
-                //     MaterialButton(
-                //       padding:
-                //           const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
-                //       onPressed: () {},
-                //       child: const Row(
-                //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //         children: [
-                //           Icon(Icons.location_pin),
-                //           Text("Syria"),
-                //           Icon(Icons.arrow_drop_down)
-                //         ],
-                //       ),
-                //     ),
-                //     IconButton(
-                //         onPressed: () {},
-                //         icon: const Icon(
-                //           Icons.notifications_none_outlined,
-                //           color: Colors.black,
-                //         ))
-                //   ],
-                // ),
                 SizedBox(
                   height: 50,
                   child: NeonSearchBar(
@@ -219,20 +113,7 @@ class HomeScreen extends StatelessWidget {
                   height: 120,
                   child: GetBuilder<HomeScreenController>(
                     builder: (controller) => controller.categoryList.isEmpty
-                        ? ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: 5,
-                            itemBuilder: (BuildContext context, int index) {
-                              return Container(
-                                  height: 120,
-                                  width: 100,
-                                  margin: EdgeInsets.all(5),
-                                  child: Shimmer.fromColors(
-                                      baseColor: AppColors.primaryClr,
-                                      highlightColor: AppColors.secondaryClr,
-                                      child: Text("loding")));
-                            },
-                          )
+                        ? CategorisLoding()
                         : ListView.builder(
                             scrollDirection: Axis.horizontal,
                             itemCount: controller.categoryList.length,
@@ -294,43 +175,7 @@ class HomeScreen extends StatelessWidget {
                 ),
                 GetBuilder<HomeScreenController>(builder: (controller) {
                   return controller.categoryList.isEmpty
-                      ? ListView.builder(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: 5,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Row(
-                              children: [
-                                Expanded(
-                                  child: Container(
-                                      height: 250,
-                                      width: div.width * 0.4,
-                                      margin: EdgeInsets.all(5),
-                                      child: Center(
-                                        child: Shimmer.fromColors(
-                                            baseColor: AppColors.primaryClr,
-                                            highlightColor:
-                                                AppColors.secondaryClr,
-                                            child: Text("loding")),
-                                      )),
-                                ),
-                                Expanded(
-                                  child: Container(
-                                      height: 250,
-                                      width: div.width * 0.4,
-                                      margin: EdgeInsets.all(5),
-                                      child: Center(
-                                        child: Shimmer.fromColors(
-                                            baseColor: AppColors.primaryClr,
-                                            highlightColor:
-                                                AppColors.secondaryClr,
-                                            child: Text("loding")),
-                                      )),
-                                ),
-                              ],
-                            );
-                          },
-                        )
+                      ? HomeScreenProductsLoding(div: div)
                       : ListView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
@@ -338,9 +183,7 @@ class HomeScreen extends StatelessWidget {
                           itemBuilder: (BuildContext context, int index) {
                             return Container(
                               margin: const EdgeInsets.only(bottom: 10),
-                              height: orientation == Orientation.portrait
-                                  ? div.height * 0.40
-                                  : div.width * 0.40,
+                              height: div.height * 0.40,
                               child: Column(
                                 children: [
                                   Row(
@@ -372,10 +215,7 @@ class HomeScreen extends StatelessWidget {
                                     ],
                                   ),
                                   SizedBox(
-                                      height:
-                                          orientation == Orientation.portrait
-                                              ? div.height / 3
-                                              : div.width / 3,
+                                      height: div.height / 3,
                                       child: ListView.builder(
                                         scrollDirection: Axis.horizontal,
                                         itemCount: controller
@@ -390,22 +230,16 @@ class HomeScreen extends StatelessWidget {
                                               Get.toNamed(
                                                   AppRouter.productscreen,
                                                   arguments: {
-                                                    "productId": controller
+                                                    "id": controller
                                                         .categoryList[index]
                                                         .products![i]
-                                                        .id,
+                                                        .id
                                                   });
                                             },
                                             child: Container(
                                               padding: const EdgeInsets.all(5),
-                                              height: orientation ==
-                                                      Orientation.portrait
-                                                  ? div.height / 3
-                                                  : div.width / 3,
-                                              width: orientation ==
-                                                      Orientation.portrait
-                                                  ? div.height / 5
-                                                  : div.width / 5,
+                                              height: div.height / 3,
+                                              width: div.height / 5,
                                               clipBehavior: Clip.antiAlias,
                                               decoration: BoxDecoration(
                                                   color: Colors.grey
@@ -421,108 +255,145 @@ class HomeScreen extends StatelessWidget {
                                                   const EdgeInsets.symmetric(
                                                       horizontal: 10),
 
-                                              child: Column(
+                                              child: Stack(
+                                                alignment:
+                                                    AlignmentDirectional.topEnd,
                                                 children: [
-                                                  Expanded(
-                                                    flex: 3,
-                                                    child: SizedBox(
-                                                      height: double.infinity,
-                                                      width: double.infinity,
-                                                      child: CachedNetworkImage(
-                                                        fit: BoxFit.contain,
-                                                        imageUrl:
-                                                            "${ApiLinks.imagelink + controller.categoryList[index].products![i].image!}",
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Expanded(
-                                                      flex: 2,
-                                                      child: Container(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(5),
-                                                        child: Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            Expanded(
-                                                              child: Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceBetween,
-                                                                children: [
-                                                                  Expanded(
-                                                                    child: Text(
-                                                                      maxLines:
-                                                                          1,
-                                                                      overflow:
-                                                                          TextOverflow
-                                                                              .ellipsis,
-                                                                      controller
-                                                                          .categoryList[
-                                                                              index]
-                                                                          .products![
-                                                                              i]
-                                                                          .price!,
-                                                                    ),
-                                                                  ),
-                                                                  const SizedBox(
-                                                                    width: 10,
-                                                                  ),
-                                                                  IconButton(
-                                                                      padding:
-                                                                          EdgeInsets
-                                                                              .zero,
-                                                                      onPressed:
-                                                                          () {},
-                                                                      icon:
-                                                                          const Icon(
-                                                                        Icons
-                                                                            .favorite_outline_outlined,
-                                                                        color: Colors
-                                                                            .amber,
-                                                                      )),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                            Text(
-                                                              maxLines: 1,
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                              controller
-                                                                  .categoryList[
-                                                                      index]
-                                                                  .products![i]
-                                                                  .name!,
-                                                            ),
-                                                            Expanded(
-                                                              child: Text(
-                                                                maxLines: 1,
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
-                                                                controller
-                                                                    .categoryList[
-                                                                        index]
-                                                                    .products![
-                                                                        i]
-                                                                    .description!,
-                                                              ),
-                                                            ),
-                                                            Text(
-                                                              controller
-                                                                  .categoryList[
-                                                                      index]
-                                                                  .products![i]
-                                                                  .createdAt!
-                                                                  .substring(
-                                                                      0, 10),
-                                                            ),
-                                                          ],
+                                                  Column(
+                                                    children: [
+                                                      Expanded(
+                                                        flex: 3,
+                                                        child: SizedBox(
+                                                          height:
+                                                              double.infinity,
+                                                          width:
+                                                              double.infinity,
+                                                          child:
+                                                              CachedNetworkImage(
+                                                            fit: BoxFit.contain,
+                                                            imageUrl:
+                                                                "${ApiLinks.imagelink + controller.categoryList[index].products![i].image!}",
+                                                          ),
                                                         ),
-                                                      ))
+                                                      ),
+                                                      Expanded(
+                                                          flex: 2,
+                                                          child: Container(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(5),
+                                                            child: Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Expanded(
+                                                                  child: Text(
+                                                                    maxLines: 1,
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .ellipsis,
+                                                                    controller
+                                                                        .categoryList[
+                                                                            index]
+                                                                        .products![
+                                                                            i]
+                                                                        .price!,
+                                                                  ),
+                                                                ),
+                                                                Text(
+                                                                  maxLines: 1,
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                  controller
+                                                                      .categoryList[
+                                                                          index]
+                                                                      .products![
+                                                                          i]
+                                                                      .name!,
+                                                                ),
+                                                                Expanded(
+                                                                  child: Text(
+                                                                    maxLines: 1,
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .ellipsis,
+                                                                    controller
+                                                                        .categoryList[
+                                                                            index]
+                                                                        .products![
+                                                                            i]
+                                                                        .description!,
+                                                                  ),
+                                                                ),
+                                                                Text(
+                                                                  controller
+                                                                      .categoryList[
+                                                                          index]
+                                                                      .products![
+                                                                          i]
+                                                                      .createdAt!
+                                                                      .substring(
+                                                                          0,
+                                                                          10),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ))
+                                                    ],
+                                                  ),
+                                                  (controller.loding == true &&
+                                                          controller.uim ==
+                                                              controller
+                                                                  .categoryList[
+                                                                      index]
+                                                                  .products![i]
+                                                                  .id)
+                                                      ? CircularProgressIndicator(
+                                                          color: AppColors
+                                                              .secondaryClr,
+                                                        )
+                                                      : IconButton(
+                                                          padding:
+                                                              EdgeInsets.zero,
+                                                          onPressed: () {
+                                                            print("index${i}");
+
+                                                            controller
+                                                                .addToFavorate(
+                                                              controller
+                                                                  .categoryList[
+                                                                      index]
+                                                                  .products![i]
+                                                                  .id
+                                                                  .toString(),
+                                                              controller
+                                                                  .categoryList[
+                                                                      index]
+                                                                  .products![i]
+                                                                  .id!,
+                                                            );
+                                                          },
+                                                          icon: Icon(
+                                                            Icons.favorite,
+                                                            size: 30,
+                                                            color: controller
+                                                                        .categoryList[
+                                                                            index]
+                                                                        .products![
+                                                                            i]
+                                                                        .wishlistedByUser ==
+                                                                    false
+                                                                ? AppColors
+                                                                    .grayClr
+                                                                : Color
+                                                                    .fromARGB(
+                                                                        255,
+                                                                        255,
+                                                                        2,
+                                                                        18),
+                                                          )),
                                                 ],
                                               ),
                                               // width: 250,
@@ -544,23 +415,3 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
-
-final List<DropdownMenuItem<String>> langDropdownItemsMenus = langList
-    .map((String value) => DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        ))
-    .toList();
-const langList = <String>[
-  'العربية',
-  'English',
-];
-List<String> drawestring = [
-  'Fire Ad',
-  'Technical support',
-  'About our market',
-  'packages',
-  'Politics and Ethics',
-  'Marketing window',
-  "Change Language",
-];
