@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:chucker_flutter/chucker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -21,6 +22,8 @@ class SignInController extends GetxController {
 
     update();
   }
+
+  final _chuckerHttpClient = ChuckerHttpClient(http.Client());
 
   GlobalKey<FormState> signInKey = GlobalKey();
   TextEditingController emailcontroller = TextEditingController();
@@ -59,7 +62,7 @@ class SignInController extends GetxController {
     update();
     var response;
 
-    response = await http.post(
+    response = await _chuckerHttpClient.post(
       Uri.parse(ApiLinks.loginApi),
       body: {
         "email": emailcontroller.text,

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:chucker_flutter/chucker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -28,6 +29,7 @@ class SignUpController extends GetxController {
   FocusNode usernamefocus = FocusNode();
   FocusNode conpasswordfocus = FocusNode();
   FocusNode phonfocus = FocusNode();
+  final _chuckerHttpClient = ChuckerHttpClient(http.Client());
 
   signUpUser() async {
     isload = true;
@@ -55,7 +57,7 @@ class SignUpController extends GetxController {
     }
 
     // Send request
-    var response = await request.send();
+    var response = await _chuckerHttpClient.send(request);
 
     if (response.statusCode == 200) {
       showToust(
@@ -115,7 +117,13 @@ class SignUpController extends GetxController {
     datecontroller.clear();
   }
 }
-
+// vvv@gmail.com
+// ASas12@###
+// mmm@gmail.com
+// ASas234@#$
+// sss@gmail.com
+// @#$ASDasd012
+// @#$ASDasd012
 // AZXCas!@#325
 // maher@h.com
 // hamama@flutter.com

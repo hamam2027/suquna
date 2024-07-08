@@ -1,3 +1,4 @@
+import 'package:chucker_flutter/chucker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:suquna/acore/databases/cache/cache_helper.dart';
@@ -10,7 +11,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // await GetStorag.init();
   await Cashhelper.init();
-
+  ChuckerFlutter.showOnRelease = true;
+  ChuckerFlutter.showNotification = true;
   // var GetStorag = GetStorag();
 
   runApp(const MyApp());
@@ -38,12 +40,13 @@ class MyApp extends StatelessWidget {
     print(locale);
 
     return GetMaterialApp(
+      navigatorObservers: [ChuckerFlutter.navigatorObserver],
       textDirection:
           langCode == "en_US" ? TextDirection.ltr : TextDirection.rtl,
       translations: Translate(),
       locale: locale,
       debugShowCheckedModeBanner: false,
-      title: "New_Soaqna".tr,
+      title: "Soaqna".tr,
       theme: ThemeData(
         appBarTheme: AppBarTheme(
             backgroundColor: Colors.transparent,

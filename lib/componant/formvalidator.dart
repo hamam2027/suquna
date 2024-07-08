@@ -19,7 +19,7 @@ class MainFormValidator {
   static phoneValidator(String value) {
     if (value.isEmpty) {
       return 'this field is required'.tr;
-    } else if (value.length < 14) {
+    } else if (value.length != 11) {
       return "phone number is not valid";
     } else {
       return null;

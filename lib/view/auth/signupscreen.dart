@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:suquna/approuter/approuter.dart';
+import 'package:suquna/componant/formvalidator.dart';
 import 'package:suquna/componant/sharedwidgets.dart';
 import 'package:suquna/constant/appcolor.dart';
 import 'package:suquna/constant/appstyle.dart';
@@ -187,6 +188,9 @@ class SignUpScreen extends GetView<SignUpController> {
                               focusNode: controller.usernamefocus,
                             ),
                             MainformField(
+                              validator: (value) {
+                                return MainFormValidator.emailValidator(value);
+                              },
                               preicon: Icons.email,
                               hint: "Email".tr,
                               controller: controller.emailcontroller,
@@ -194,6 +198,9 @@ class SignUpScreen extends GetView<SignUpController> {
                               focusNode: controller.emailfocus,
                             ),
                             MainformField(
+                              validator: (value) {
+                                return MainFormValidator.phoneValidator(value);
+                              },
                               preicon: Icons.phone,
                               hint: "رقم الهاتف",
                               controller: controller.phonecontroller,
@@ -218,6 +225,10 @@ class SignUpScreen extends GetView<SignUpController> {
                               },
                             ),
                             MainformField(
+                              validator: (value) {
+                                return MainFormValidator.passwordValidator(
+                                    value);
+                              },
                               preicon: Icons.lock_outline,
                               hint: "Password".tr,
                               controller: controller.passwordcontroller,
@@ -225,6 +236,13 @@ class SignUpScreen extends GetView<SignUpController> {
                               focusNode: controller.passwordfocus,
                             ),
                             MainformField(
+                              validator: (value) {
+                                return MainFormValidator
+                                    .confirmPasswordValidator(
+                                  value,
+                                  controller.passwordcontroller.text,
+                                );
+                              },
                               preicon: Icons.lock_outline,
                               hint: "Confirm password".tr,
                               controller: controller.conpasswordcontroller,
